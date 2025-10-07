@@ -5,6 +5,7 @@ import '../providers/app_provider.dart';
 import '../models/reminder.dart';
 import '../widgets/info_card.dart';
 import '../widgets/upcoming_service_card.dart';
+import '../widgets/car_drawer.dart';
 import '../utils/currency_formatter.dart';
 import 'mileage_screen.dart';
 import 'service_event_screen.dart';
@@ -26,9 +27,24 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
+    final activeCar = appProvider.activeCar;
+    final carTitle = activeCar != null 
+        ? '${activeCar.name}${activeCar.plateNumber.isNotEmpty ? ' (${activeCar.plateNumber})' : ''}'
+        : l10n.appTitle;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.appTitle),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.appTitle, style: const TextStyle(fontSize: 14)),
+            if (activeCar != null)
+              Text(
+                carTitle,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -41,6 +57,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const CarDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
           // Reload data

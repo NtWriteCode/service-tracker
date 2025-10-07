@@ -636,7 +636,91 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Add \"{name}\" as custom item'**
-  String addAsCustomItem(Object name);
+  String addAsCustomItem(String name);
+
+  /// No description provided for @cars.
+  ///
+  /// In en, this message translates to:
+  /// **'Cars'**
+  String get cars;
+
+  /// No description provided for @myCars.
+  ///
+  /// In en, this message translates to:
+  /// **'My Cars'**
+  String get myCars;
+
+  /// No description provided for @addCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Car'**
+  String get addCar;
+
+  /// No description provided for @newCar.
+  ///
+  /// In en, this message translates to:
+  /// **'New Car'**
+  String get newCar;
+
+  /// No description provided for @editCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Car'**
+  String get editCar;
+
+  /// No description provided for @deleteCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Car'**
+  String get deleteCar;
+
+  /// No description provided for @carName.
+  ///
+  /// In en, this message translates to:
+  /// **'Car Name'**
+  String get carName;
+
+  /// No description provided for @plateNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate Number'**
+  String get plateNumber;
+
+  /// No description provided for @selectCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Car'**
+  String get selectCar;
+
+  /// No description provided for @deleteCarConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this car? All associated data will be deleted.'**
+  String get deleteCarConfirm;
+
+  /// No description provided for @cannotDeleteLastCar.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete the last car'**
+  String get cannotDeleteLastCar;
+
+  /// No description provided for @enterCarName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter car name'**
+  String get enterCarName;
+
+  /// No description provided for @enterPlateNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter plate number (optional)'**
+  String get enterPlateNumber;
+
+  /// No description provided for @carNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Car name is required'**
+  String get carNameRequired;
 }
 
 class _AppLocalizationsDelegate

@@ -96,6 +96,20 @@
         "type": "String"
       }
     }
-  }
+  },
+  "cars": "Cars",
+  "myCars": "My Cars",
+  "addCar": "Add Car",
+  "newCar": "New Car",
+  "editCar": "Edit Car",
+  "deleteCar": "Delete Car",
+  "carName": "Car Name",
+  "plateNumber": "Plate Number",
+  "selectCar": "Select Car",
+  "deleteCarConfirm": "Are you sure you want to delete this car? All associated data will be deleted.",
+  "cannotDeleteLastCar": "Cannot delete the last car",
+  "enterCarName": "Enter car name",
+  "enterPlateNumber": "Enter plate number (optional)",
+  "carNameRequired": "Car name is required"
 }
 

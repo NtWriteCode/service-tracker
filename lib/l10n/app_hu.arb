@@ -96,6 +96,20 @@
         "type": "String"
       }
     }
-  }
+  },
+  "cars": "Autók",
+  "myCars": "Autóim",
+  "addCar": "Autó hozzáadása",
+  "newCar": "Új autó",
+  "editCar": "Autó szerkesztése",
+  "deleteCar": "Autó törlése",
+  "carName": "Autó neve",
+  "plateNumber": "Rendszám",
+  "selectCar": "Autó kiválasztása",
+  "deleteCarConfirm": "Biztosan törölni szeretnéd ezt az autót? Minden kapcsolódó adat törlésre kerül.",
+  "cannotDeleteLastCar": "Az utolsó autót nem lehet törölni",
+  "enterCarName": "Add meg az autó nevét",
+  "enterPlateNumber": "Add meg a rendszámot (opcionális)",
+  "carNameRequired": "Az autó neve kötelező"
 }
 

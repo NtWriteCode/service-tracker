@@ -282,7 +282,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get custom => 'Custom';
 
   @override
-  String addAsCustomItem(Object name) {
+  String addAsCustomItem(String name) {
     return 'Add \"$name\" as custom item';
   }
+
+  @override
+  String get cars => 'Cars';
+
+  @override
+  String get myCars => 'My Cars';
+
+  @override
+  String get addCar => 'Add Car';
+
+  @override
+  String get newCar => 'New Car';
+
+  @override
+  String get editCar => 'Edit Car';
+
+  @override
+  String get deleteCar => 'Delete Car';
+
+  @override
+  String get carName => 'Car Name';
+
+  @override
+  String get plateNumber => 'Plate Number';
+
+  @override
+  String get selectCar => 'Select Car';
+
+  @override
+  String get deleteCarConfirm =>
+      'Are you sure you want to delete this car? All associated data will be deleted.';
+
+  @override
+  String get cannotDeleteLastCar => 'Cannot delete the last car';
+
+  @override
+  String get enterCarName => 'Enter car name';
+
+  @override
+  String get enterPlateNumber => 'Enter plate number (optional)';
+
+  @override
+  String get carNameRequired => 'Car name is required';
 }

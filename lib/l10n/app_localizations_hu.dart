@@ -284,7 +284,50 @@ class AppLocalizationsHu extends AppLocalizations {
   String get custom => 'Egyedi';
 
   @override
-  String addAsCustomItem(Object name) {
+  String addAsCustomItem(String name) {
     return '\"$name\" hozzáadása egyedi tételként';
   }
+
+  @override
+  String get cars => 'Autók';
+
+  @override
+  String get myCars => 'Autóim';
+
+  @override
+  String get addCar => 'Autó hozzáadása';
+
+  @override
+  String get newCar => 'Új autó';
+
+  @override
+  String get editCar => 'Autó szerkesztése';
+
+  @override
+  String get deleteCar => 'Autó törlése';
+
+  @override
+  String get carName => 'Autó neve';
+
+  @override
+  String get plateNumber => 'Rendszám';
+
+  @override
+  String get selectCar => 'Autó kiválasztása';
+
+  @override
+  String get deleteCarConfirm =>
+      'Biztosan törölni szeretnéd ezt az autót? Minden kapcsolódó adat törlésre kerül.';
+
+  @override
+  String get cannotDeleteLastCar => 'Az utolsó autót nem lehet törölni';
+
+  @override
+  String get enterCarName => 'Add meg az autó nevét';
+
+  @override
+  String get enterPlateNumber => 'Add meg a rendszámot (opcionális)';
+
+  @override
+  String get carNameRequired => 'Az autó neve kötelező';
 }

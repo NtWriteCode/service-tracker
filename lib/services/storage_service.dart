@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/car.dart';
 import '../models/service_item.dart';
 import '../models/service_event.dart';
 import '../models/reminder.dart';
@@ -8,11 +10,9 @@ import '../models/app_settings.dart';
 import '../constants/default_items.dart';
 
 class StorageService {
-  static const String _serviceItemsFile = 'service_items.json';
-  static const String _serviceEventsFile = 'service_events.json';
-  static const String _remindersFile = 'reminders.json';
-  static const String _settingsFile = 'settings.json';
-
+  static const String _carsFile = 'cars.json';
+  static const String _activeCarKey = 'active_car_id';
+  
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
@@ -22,14 +22,63 @@ class StorageService {
     final path = await _localPath;
     return File('$path/$fileName');
   }
-
-  // Service Items
-  Future<List<ServiceItem>> loadServiceItems() async {
+  
+  String _getCarFileName(String carId, String type) {
+    return 'car_${carId}_$type.json';
+  }
+  
+  // Cars Management
+  Future<List<Car>> loadCars() async {
     try {
-      final file = await _getFile(_serviceItemsFile);
+      final file = await _getFile(_carsFile);
+      if (!await file.exists()) {
+        return [];
+      }
+      final contents = await file.readAsString();
+      final List<dynamic> jsonData = json.decode(contents);
+      return jsonData.map((item) => Car.fromJson(item)).toList();
+    } catch (e) {
+      print('Error loading cars: $e');
+      return [];
+    }
+  }
+  
+  Future<void> saveCars(List<Car> cars) async {
+    try {
+      final file = await _getFile(_carsFile);
+      final jsonData = cars.map((car) => car.toJson()).toList();
+      await file.writeAsString(json.encode(jsonData));
+    } catch (e) {
+      print('Error saving cars: $e');
+    }
+  }
+  
+  Future<String?> loadActiveCarId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_activeCarKey);
+    } catch (e) {
+      print('Error loading active car ID: $e');
+      return null;
+    }
+  }
+  
+  Future<void> saveActiveCarId(String carId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_activeCarKey, carId);
+    } catch (e) {
+      print('Error saving active car ID: $e');
+    }
+  }
+
+  // Service Items (per car)
+  Future<List<ServiceItem>> loadServiceItems(String carId) async {
+    try {
+      final file = await _getFile(_getCarFileName(carId, 'service_items'));
       if (!await file.exists()) {
         // Initialize with default items
-        await saveServiceItems(defaultServiceItems);
+        await saveServiceItems(defaultServiceItems, carId);
         return defaultServiceItems;
       }
       final contents = await file.readAsString();
@@ -41,9 +90,9 @@ class StorageService {
     }
   }
 
-  Future<void> saveServiceItems(List<ServiceItem> items) async {
+  Future<void> saveServiceItems(List<ServiceItem> items, String carId) async {
     try {
-      final file = await _getFile(_serviceItemsFile);
+      final file = await _getFile(_getCarFileName(carId, 'service_items'));
       final jsonData = items.map((item) => item.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
     } catch (e) {
@@ -51,10 +100,10 @@ class StorageService {
     }
   }
 
-  // Service Events
-  Future<List<ServiceEvent>> loadServiceEvents() async {
+  // Service Events (per car)
+  Future<List<ServiceEvent>> loadServiceEvents(String carId) async {
     try {
-      final file = await _getFile(_serviceEventsFile);
+      final file = await _getFile(_getCarFileName(carId, 'service_events'));
       if (!await file.exists()) {
         return [];
       }
@@ -67,9 +116,9 @@ class StorageService {
     }
   }
 
-  Future<void> saveServiceEvents(List<ServiceEvent> events) async {
+  Future<void> saveServiceEvents(List<ServiceEvent> events, String carId) async {
     try {
-      final file = await _getFile(_serviceEventsFile);
+      final file = await _getFile(_getCarFileName(carId, 'service_events'));
       final jsonData = events.map((event) => event.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
     } catch (e) {
@@ -77,10 +126,10 @@ class StorageService {
     }
   }
 
-  // Reminders
-  Future<List<Reminder>> loadReminders() async {
+  // Reminders (per car)
+  Future<List<Reminder>> loadReminders(String carId) async {
     try {
-      final file = await _getFile(_remindersFile);
+      final file = await _getFile(_getCarFileName(carId, 'reminders'));
       if (!await file.exists()) {
         return [];
       }
@@ -93,9 +142,9 @@ class StorageService {
     }
   }
 
-  Future<void> saveReminders(List<Reminder> reminders) async {
+  Future<void> saveReminders(List<Reminder> reminders, String carId) async {
     try {
-      final file = await _getFile(_remindersFile);
+      final file = await _getFile(_getCarFileName(carId, 'reminders'));
       final jsonData = reminders.map((reminder) => reminder.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
     } catch (e) {
@@ -103,13 +152,13 @@ class StorageService {
     }
   }
 
-  // Settings
-  Future<AppSettings> loadSettings() async {
+  // Settings (per car)
+  Future<AppSettings> loadSettings(String carId) async {
     try {
-      final file = await _getFile(_settingsFile);
+      final file = await _getFile(_getCarFileName(carId, 'settings'));
       if (!await file.exists()) {
         final defaultSettings = AppSettings(currentMileage: 0);
-        await saveSettings(defaultSettings);
+        await saveSettings(defaultSettings, carId);
         return defaultSettings;
       }
       final contents = await file.readAsString();
@@ -121,9 +170,9 @@ class StorageService {
     }
   }
 
-  Future<void> saveSettings(AppSettings settings) async {
+  Future<void> saveSettings(AppSettings settings, String carId) async {
     try {
-      final file = await _getFile(_settingsFile);
+      final file = await _getFile(_getCarFileName(carId, 'settings'));
       await file.writeAsString(json.encode(settings.toJson()));
     } catch (e) {
       print('Error saving settings: $e');
