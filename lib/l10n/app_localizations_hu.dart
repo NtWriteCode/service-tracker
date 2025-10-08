@@ -448,4 +448,37 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get logoutConfirm =>
       'Biztosan ki szeretnél jelentkezni? Ez nem törli a helyi adatokat.';
+
+  @override
+  String get selectReminderTemplate => 'Emlékeztető sablon kiválasztása';
+
+  @override
+  String get customReminder => 'Egyedi emlékeztető';
+
+  @override
+  String get createFromScratch => 'Létrehozás nulláról';
+
+  @override
+  String addServiceForReminder(String reminderName) {
+    return 'Szerviz hozzáadása ehhez: \"$reminderName\"?';
+  }
+
+  @override
+  String get tapToAddService => 'Koppints a szerviz esemény hozzáadásához';
+
+  @override
+  String get skipPeriod => 'Következő periódus kihagyása';
+
+  @override
+  String get undoSkip => 'Kihagyás visszavonása';
+
+  @override
+  String get periodSkipped =>
+      'Periódus kihagyva - emlékeztető következő intervallumra tolva';
+
+  @override
+  String get skipUndone => 'Kihagyás visszavonva - emlékeztető visszaállítva';
+
+  @override
+  String get undo => 'Visszavonás';
 }

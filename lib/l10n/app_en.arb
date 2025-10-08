@@ -148,6 +148,23 @@
   "webdavUrlRequired": "WebDAV URL is required",
   "usernameRequired": "Username is required",
   "passwordRequired": "Password is required",
-  "logoutConfirm": "Are you sure you want to logout? This will not delete any local data."
+  "logoutConfirm": "Are you sure you want to logout? This will not delete any local data.",
+  "selectReminderTemplate": "Select Reminder Template",
+  "customReminder": "Custom Reminder",
+  "createFromScratch": "Create from scratch",
+  "addServiceForReminder": "Add service for \"{reminderName}\" now?",
+  "@addServiceForReminder": {
+    "placeholders": {
+      "reminderName": {
+        "type": "String"
+      }
+    }
+  },
+  "tapToAddService": "Tap to add service event",
+  "skipPeriod": "Skip Next Period",
+  "undoSkip": "Undo Skip",
+  "periodSkipped": "Period skipped - reminder pushed to next interval",
+  "skipUndone": "Skip undone - reminder restored",
+  "undo": "Undo"
 }
 

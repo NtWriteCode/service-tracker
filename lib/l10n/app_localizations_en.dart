@@ -445,4 +445,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get logoutConfirm =>
       'Are you sure you want to logout? This will not delete any local data.';
+
+  @override
+  String get selectReminderTemplate => 'Select Reminder Template';
+
+  @override
+  String get customReminder => 'Custom Reminder';
+
+  @override
+  String get createFromScratch => 'Create from scratch';
+
+  @override
+  String addServiceForReminder(String reminderName) {
+    return 'Add service for \"$reminderName\" now?';
+  }
+
+  @override
+  String get tapToAddService => 'Tap to add service event';
+
+  @override
+  String get skipPeriod => 'Skip Next Period';
+
+  @override
+  String get undoSkip => 'Undo Skip';
+
+  @override
+  String get periodSkipped =>
+      'Period skipped - reminder pushed to next interval';
+
+  @override
+  String get skipUndone => 'Skip undone - reminder restored';
+
+  @override
+  String get undo => 'Undo';
 }

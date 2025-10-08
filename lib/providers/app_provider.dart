@@ -238,6 +238,31 @@ class AppProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> skipReminderPeriod(String reminderId) async {
+    final index = _reminders.indexWhere((r) => r.id == reminderId);
+    if (index != -1) {
+      final reminder = _reminders[index];
+      // Max 1 skipped period
+      if (reminder.skippedPeriods < 1) {
+        _reminders[index] = reminder.copyWith(skippedPeriods: 1);
+        await _storageService.saveReminders(_reminders, _activeCarId!);
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> undoSkipReminderPeriod(String reminderId) async {
+    final index = _reminders.indexWhere((r) => r.id == reminderId);
+    if (index != -1) {
+      final reminder = _reminders[index];
+      if (reminder.skippedPeriods > 0) {
+        _reminders[index] = reminder.copyWith(skippedPeriods: 0);
+        await _storageService.saveReminders(_reminders, _activeCarId!);
+        notifyListeners();
+      }
+    }
+  }
+
   // Settings
   Future<void> updateMileage(int mileage) async {
     _settings = _settings.copyWith(currentMileage: mileage);
@@ -333,36 +358,71 @@ class AppProvider with ChangeNotifier {
       final lastService = getLastServiceForItems(reminder.itemIds);
       
       if (lastService == null) {
-        // No previous service, mark as due now
+        // No previous service, instant overdue state
         upcoming.add({
           'reminder': reminder,
           'dueKm': reminder.hasKmInterval ? reminder.intervalKm : null,
           'dueDate': reminder.hasTimeInterval
               ? DateTime.now().add(Duration(days: reminder.intervalMonths! * 30))
               : null,
-          'isOverdue': true,
+          'urgencyLevel': 'overdue',
+          'kmPercentage': null,
+          'datePercentage': null,
         });
       } else {
         int? dueKm;
         DateTime? dueDate;
-        bool isOverdue = false;
+        double? kmPercentage;
+        double? datePercentage;
 
+        // Calculate km-based urgency (accounting for skipped periods)
         if (reminder.hasKmInterval) {
-          dueKm = lastService.mileage + reminder.intervalKm!;
-          if (_settings.currentMileage >= dueKm) {
-            isOverdue = true;
-          }
+          final periodsToSkip = reminder.skippedPeriods + 1; // +1 for the current period
+          dueKm = lastService.mileage + (reminder.intervalKm! * periodsToSkip);
+          final kmElapsed = _settings.currentMileage - lastService.mileage;
+          final totalKmForPeriod = reminder.intervalKm! * periodsToSkip;
+          kmPercentage = (kmElapsed / totalKmForPeriod) * 100;
         }
 
+        // Calculate time-based urgency (accounting for skipped periods)
         if (reminder.hasTimeInterval) {
+          final periodsToSkip = reminder.skippedPeriods + 1; // +1 for the current period
           dueDate = DateTime(
             lastService.date.year,
-            lastService.date.month + reminder.intervalMonths!,
+            lastService.date.month + (reminder.intervalMonths! * periodsToSkip),
             lastService.date.day,
           );
-          if (DateTime.now().isAfter(dueDate)) {
-            isOverdue = true;
+          final totalDays = dueDate.difference(lastService.date).inDays;
+          final elapsedDays = DateTime.now().difference(lastService.date).inDays;
+          datePercentage = (elapsedDays / totalDays) * 100;
+        }
+
+        // Determine urgency level based on the worst (highest) percentage
+        final maxPercentage = [
+          kmPercentage ?? 0,
+          datePercentage ?? 0,
+        ].reduce((a, b) => a > b ? a : b);
+
+        String urgencyLevel;
+        if (maxPercentage < 50) {
+          // Below 50%, don't show unless it's a skipped reminder
+          if (!reminder.isSkipped) {
+            continue;
           }
+          // If skipped, still show it as green
+          urgencyLevel = 'good';
+        } else if (maxPercentage < 75) {
+          // 50-75%: Green
+          urgencyLevel = 'good';
+        } else if (maxPercentage < 95) {
+          // 75-95%: Orange
+          urgencyLevel = 'warning';
+        } else if (maxPercentage < 100) {
+          // 95-100%: Red
+          urgencyLevel = 'urgent';
+        } else {
+          // 100%+: Dark red (overdue)
+          urgencyLevel = 'overdue';
         }
 
         upcoming.add({
@@ -370,24 +430,28 @@ class AppProvider with ChangeNotifier {
           'lastService': lastService,
           'dueKm': dueKm,
           'dueDate': dueDate,
-          'isOverdue': isOverdue,
+          'urgencyLevel': urgencyLevel,
+          'kmPercentage': kmPercentage,
+          'datePercentage': datePercentage,
         });
       }
     }
 
-    // Sort by urgency (overdue first, then by proximity)
+    // Sort by urgency level first, then by percentage
     upcoming.sort((a, b) {
-      if (a['isOverdue'] && !b['isOverdue']) return -1;
-      if (!a['isOverdue'] && b['isOverdue']) return 1;
+      final urgencyOrder = {'overdue': 0, 'urgent': 1, 'warning': 2, 'good': 3};
+      final aOrder = urgencyOrder[a['urgencyLevel']]!;
+      final bOrder = urgencyOrder[b['urgencyLevel']]!;
       
-      // Both overdue or both not overdue, sort by proximity
-      if (a['dueKm'] != null && b['dueKm'] != null) {
-        final aDiff = (a['dueKm'] as int) - _settings.currentMileage;
-        final bDiff = (b['dueKm'] as int) - _settings.currentMileage;
-        return aDiff.compareTo(bDiff);
-      }
+      if (aOrder != bOrder) return aOrder.compareTo(bOrder);
       
-      return 0;
+      // Same urgency, sort by highest percentage
+      final aMax = [a['kmPercentage'] ?? 0.0, a['datePercentage'] ?? 0.0]
+          .reduce((a, b) => a > b ? a : b);
+      final bMax = [b['kmPercentage'] ?? 0.0, b['datePercentage'] ?? 0.0]
+          .reduce((a, b) => a > b ? a : b);
+      
+      return bMax.compareTo(aMax); // Higher percentage first
     });
 
     return upcoming;

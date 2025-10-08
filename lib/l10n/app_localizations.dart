@@ -949,6 +949,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to logout? This will not delete any local data.'**
   String get logoutConfirm;
+
+  /// No description provided for @selectReminderTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Reminder Template'**
+  String get selectReminderTemplate;
+
+  /// No description provided for @customReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Reminder'**
+  String get customReminder;
+
+  /// No description provided for @createFromScratch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create from scratch'**
+  String get createFromScratch;
+
+  /// No description provided for @addServiceForReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add service for \"{reminderName}\" now?'**
+  String addServiceForReminder(String reminderName);
+
+  /// No description provided for @tapToAddService.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add service event'**
+  String get tapToAddService;
+
+  /// No description provided for @skipPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Next Period'**
+  String get skipPeriod;
+
+  /// No description provided for @undoSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo Skip'**
+  String get undoSkip;
+
+  /// No description provided for @periodSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Period skipped - reminder pushed to next interval'**
+  String get periodSkipped;
+
+  /// No description provided for @skipUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip undone - reminder restored'**
+  String get skipUndone;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
 }
 
 class _AppLocalizationsDelegate

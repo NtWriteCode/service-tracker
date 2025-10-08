@@ -13,8 +13,9 @@ import '../utils/currency_formatter.dart';
 
 class ServiceEventScreen extends StatefulWidget {
   final ServiceEvent? event;
+  final List<String>? prefilledItemIds;
 
-  const ServiceEventScreen({super.key, this.event});
+  const ServiceEventScreen({super.key, this.event, this.prefilledItemIds});
 
   @override
   State<ServiceEventScreen> createState() => _ServiceEventScreenState();
@@ -41,6 +42,13 @@ class _ServiceEventScreenState extends State<ServiceEventScreen> {
       }
     } else {
       _selectedDate = DateTime.now();
+      
+      // Pre-fill items if provided (from reminder)
+      if (widget.prefilledItemIds != null) {
+        for (final itemId in widget.prefilledItemIds!) {
+          _selectedItems.add({'itemId': itemId, 'price': 0.0});
+        }
+      }
     }
   }
 

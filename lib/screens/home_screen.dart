@@ -241,16 +241,20 @@ class HomeScreen extends StatelessWidget {
             else
               ...upcomingServices.take(5).map((service) {
                 final reminder = service['reminder'] as Reminder;
-                final isOverdue = service['isOverdue'] as bool;
+                final urgencyLevel = service['urgencyLevel'] as String;
                 final dueKm = service['dueKm'] as int?;
                 final dueDate = service['dueDate'] as DateTime?;
 
                 return UpcomingServiceCard(
                   reminder: reminder,
-                  isOverdue: isOverdue,
+                  urgencyLevel: urgencyLevel,
                   dueKm: dueKm,
                   dueDate: dueDate,
                   currentMileage: appProvider.settings.currentMileage,
+                  onServiceAdded: () {
+                    // This will trigger a rebuild of the home screen
+                    // to refresh the upcoming services list
+                  },
                 );
               }),
           ],

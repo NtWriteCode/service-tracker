@@ -148,6 +148,23 @@
   "webdavUrlRequired": "WebDAV URL megadása kötelező",
   "usernameRequired": "Felhasználónév megadása kötelező",
   "passwordRequired": "Jelszó megadása kötelező",
-  "logoutConfirm": "Biztosan ki szeretnél jelentkezni? Ez nem törli a helyi adatokat."
+  "logoutConfirm": "Biztosan ki szeretnél jelentkezni? Ez nem törli a helyi adatokat.",
+  "selectReminderTemplate": "Emlékeztető sablon kiválasztása",
+  "customReminder": "Egyedi emlékeztető",
+  "createFromScratch": "Létrehozás nulláról",
+  "addServiceForReminder": "Szerviz hozzáadása ehhez: \"{reminderName}\"?",
+  "@addServiceForReminder": {
+    "placeholders": {
+      "reminderName": {
+        "type": "String"
+      }
+    }
+  },
+  "tapToAddService": "Koppints a szerviz esemény hozzáadásához",
+  "skipPeriod": "Következő periódus kihagyása",
+  "undoSkip": "Kihagyás visszavonása",
+  "periodSkipped": "Periódus kihagyva - emlékeztető következő intervallumra tolva",
+  "skipUndone": "Kihagyás visszavonva - emlékeztető visszaállítva",
+  "undo": "Visszavonás"
 }
 

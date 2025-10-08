@@ -84,8 +84,8 @@ final List<ServiceItem> defaultServiceItems = [
   ),
   ServiceItem(
     id: 'default_17',
-    nameEn: 'Transmission Oil',
-    nameHu: 'Sebességváltó olaj',
+    nameEn: 'Transmission Fluid',
+    nameHu: 'Sebességváltó folyadék',
   ),
   ServiceItem(
     id: 'default_18',
@@ -126,6 +126,21 @@ final List<ServiceItem> defaultServiceItems = [
     id: 'default_25',
     nameEn: 'Oil Drain Plug/Washer',
     nameHu: 'Olajleeresztő csavar/alátét',
+  ),
+  ServiceItem(
+    id: 'default_26',
+    nameEn: 'Driver\'s License Renewal',
+    nameHu: 'Jogosítvány megújítás',
+  ),
+  ServiceItem(
+    id: 'default_27',
+    nameEn: 'Technical Inspection',
+    nameHu: 'Műszaki vizsga',
+  ),
+  ServiceItem(
+    id: 'default_28',
+    nameEn: 'Insurance Renewal',
+    nameHu: 'Biztosítás megújítás',
   ),
 ];
 

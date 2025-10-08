@@ -7,6 +7,7 @@ import '../providers/app_provider.dart';
 import '../models/reminder.dart';
 import '../models/service_item.dart';
 import '../utils/currency_formatter.dart';
+import '../constants/default_reminders.dart';
 
 class RemindersScreen extends StatelessWidget {
   const RemindersScreen({super.key});
@@ -90,14 +91,67 @@ class RemindersScreen extends StatelessWidget {
   }
 
   Future<void> _addReminder(BuildContext context) async {
-    await _showReminderDialog(context, null);
+    final l10n = AppLocalizations.of(context)!;
+    final languageCode = Localizations.localeOf(context).languageCode;
+    
+    // Show template selection dialog
+    final template = await showDialog<ReminderTemplate?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.selectReminderTemplate),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              // Custom reminder option
+              ListTile(
+                leading: const Icon(Icons.add_circle_outline, color: Colors.blue),
+                title: Text(l10n.customReminder),
+                subtitle: Text(l10n.createFromScratch),
+                onTap: () => Navigator.pop(context, null),
+              ),
+              const Divider(),
+              // Predefined templates
+              ...defaultReminderTemplates.map((template) {
+                return ListTile(
+                  leading: const Icon(Icons.schedule, color: Colors.green),
+                  title: Text(template.getName(languageCode)),
+                  subtitle: Text(
+                    [
+                      if (template.intervalKm != null)
+                        '${CurrencyFormatter.formatMileage(template.intervalKm!)} ${l10n.km}',
+                      if (template.intervalMonths != null)
+                        '${template.intervalMonths} ${l10n.everyMonths.toLowerCase()}',
+                    ].join(' ${l10n.or} '),
+                  ),
+                  onTap: () => Navigator.pop(context, template),
+                );
+              }),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+
+    // Don't proceed if user cancelled
+    if (!context.mounted) return;
+    
+    // Show reminder dialog with template pre-filled (or empty if custom)
+    await _showReminderDialog(context, null, template: template);
   }
 
   Future<void> _editReminder(BuildContext context, Reminder reminder) async {
     await _showReminderDialog(context, reminder);
   }
 
-  Future<void> _showReminderDialog(BuildContext context, Reminder? reminder) async {
+  Future<void> _showReminderDialog(BuildContext context, Reminder? reminder, {ReminderTemplate? template}) async {
     final languageCode = Localizations.localeOf(context).languageCode;
     
     await Navigator.push(
@@ -106,6 +160,7 @@ class RemindersScreen extends StatelessWidget {
         builder: (_) => _ReminderEditScreen(
           reminder: reminder,
           languageCode: languageCode,
+          template: template,
         ),
       ),
     );
@@ -144,10 +199,12 @@ class RemindersScreen extends StatelessWidget {
 class _ReminderEditScreen extends StatefulWidget {
   final Reminder? reminder;
   final String languageCode;
+  final ReminderTemplate? template;
 
   const _ReminderEditScreen({
     this.reminder,
     required this.languageCode,
+    this.template,
   });
 
   @override
@@ -166,10 +223,17 @@ class _ReminderEditScreenState extends State<_ReminderEditScreen> {
   void initState() {
     super.initState();
     if (widget.reminder != null) {
+      // Editing existing reminder
       _nameController.text = widget.reminder!.name;
       _kmController.text = widget.reminder!.intervalKm?.toString() ?? '';
       _monthsController.text = widget.reminder!.intervalMonths?.toString() ?? '';
       _selectedItemIds.addAll(widget.reminder!.itemIds);
+    } else if (widget.template != null) {
+      // Using a template
+      _nameController.text = widget.template!.getName(widget.languageCode);
+      _kmController.text = widget.template!.intervalKm?.toString() ?? '';
+      _monthsController.text = widget.template!.intervalMonths?.toString() ?? '';
+      _selectedItemIds.addAll(widget.template!.suggestedItemIds);
     }
   }
 

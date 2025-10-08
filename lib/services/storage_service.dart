@@ -94,7 +94,24 @@ class StorageService {
       }
       final contents = await file.readAsString();
       final List<dynamic> jsonData = json.decode(contents);
-      return jsonData.map((item) => ServiceItem.fromJson(item)).toList();
+      final loadedItems = jsonData.map((item) => ServiceItem.fromJson(item)).toList();
+      
+      // Merge with default items to add any new defaults that don't exist
+      final mergedItems = List<ServiceItem>.from(loadedItems);
+      final existingIds = loadedItems.map((item) => item.id).toSet();
+      
+      for (final defaultItem in defaultServiceItems) {
+        if (!existingIds.contains(defaultItem.id)) {
+          mergedItems.add(defaultItem);
+        }
+      }
+      
+      // Save the merged list if new items were added
+      if (mergedItems.length > loadedItems.length) {
+        await saveServiceItems(mergedItems, carId);
+      }
+      
+      return mergedItems;
     } catch (e) {
       print('Error loading service items: $e');
       return defaultServiceItems;
