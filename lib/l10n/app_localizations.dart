@@ -721,6 +721,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Car name is required'**
   String get carNameRequired;
+
+  /// No description provided for @brand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get brand;
+
+  /// No description provided for @selectBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Brand'**
+  String get selectBrand;
+
+  /// No description provided for @searchBrands.
+  ///
+  /// In en, this message translates to:
+  /// **'Search brands...'**
+  String get searchBrands;
+
+  /// No description provided for @noBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'No brand'**
+  String get noBrand;
+
+  /// No description provided for @nickname.
+  ///
+  /// In en, this message translates to:
+  /// **'Nickname'**
+  String get nickname;
+
+  /// No description provided for @enterNickname.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter nickname (optional)'**
+  String get enterNickname;
+
+  /// No description provided for @nicknameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Polo, Home car'**
+  String get nicknameHint;
 }
 
 class _AppLocalizationsDelegate

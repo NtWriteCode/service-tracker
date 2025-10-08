@@ -328,4 +328,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get carNameRequired => 'Car name is required';
+
+  @override
+  String get brand => 'Brand';
+
+  @override
+  String get selectBrand => 'Select Brand';
+
+  @override
+  String get searchBrands => 'Search brands...';
+
+  @override
+  String get noBrand => 'No brand';
+
+  @override
+  String get nickname => 'Nickname';
+
+  @override
+  String get enterNickname => 'Enter nickname (optional)';
+
+  @override
+  String get nicknameHint => 'e.g., Polo, Home car';
 }

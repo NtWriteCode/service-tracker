@@ -110,6 +110,13 @@
   "cannotDeleteLastCar": "Cannot delete the last car",
   "enterCarName": "Enter car name",
   "enterPlateNumber": "Enter plate number (optional)",
-  "carNameRequired": "Car name is required"
+  "carNameRequired": "Car name is required",
+  "brand": "Brand",
+  "selectBrand": "Select Brand",
+  "searchBrands": "Search brands...",
+  "noBrand": "No brand",
+  "nickname": "Nickname",
+  "enterNickname": "Enter nickname (optional)",
+  "nicknameHint": "e.g., Polo, Home car"
 }
 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/app_provider.dart';
 import '../models/reminder.dart';
+import '../services/car_brand_service.dart';
 import '../widgets/info_card.dart';
 import '../widgets/upcoming_service_card.dart';
 import '../widgets/car_drawer.dart';
@@ -28,21 +29,37 @@ class HomeScreen extends StatelessWidget {
     }
 
     final activeCar = appProvider.activeCar;
-    final carTitle = activeCar != null 
-        ? '${activeCar.name}${activeCar.plateNumber.isNotEmpty ? ' (${activeCar.plateNumber})' : ''}'
-        : l10n.appTitle;
+    final brand = CarBrandService.getBrandBySlug(activeCar?.brandSlug);
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            Text(l10n.appTitle, style: const TextStyle(fontSize: 14)),
-            if (activeCar != null)
-              Text(
-                carTitle,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            if (brand != null) ...[
+              Image.asset(
+                brand.localImagePath,
+                width: 32,
+                height: 32,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
               ),
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (brand != null)
+                    Text(brand.name, style: const TextStyle(fontSize: 12)),
+                  if (activeCar != null)
+                    Text(
+                      activeCar.name,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
         actions: [

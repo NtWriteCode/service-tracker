@@ -5,6 +5,7 @@ import '../models/service_event.dart';
 import '../models/reminder.dart';
 import '../models/app_settings.dart';
 import '../services/storage_service.dart';
+import '../services/car_brand_service.dart';
 
 class AppProvider with ChangeNotifier {
   final StorageService _storageService = StorageService();
@@ -44,6 +45,9 @@ class AppProvider with ChangeNotifier {
   Future<void> _loadData() async {
     _isLoading = true;
     notifyListeners();
+
+    // Preload car brands for logo display
+    await CarBrandService.loadBrands();
 
     // Load cars and active car ID
     _cars = await _storageService.loadCars();

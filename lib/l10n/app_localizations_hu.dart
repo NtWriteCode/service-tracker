@@ -330,4 +330,25 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get carNameRequired => 'Az autó neve kötelező';
+
+  @override
+  String get brand => 'Márka';
+
+  @override
+  String get selectBrand => 'Márka kiválasztása';
+
+  @override
+  String get searchBrands => 'Márkák keresése...';
+
+  @override
+  String get noBrand => 'Nincs márka';
+
+  @override
+  String get nickname => 'Becenév';
+
+  @override
+  String get enterNickname => 'Add meg a becenevet (opcionális)';
+
+  @override
+  String get nicknameHint => 'pl. Polo, Otthoni autó';
 }

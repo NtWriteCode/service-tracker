@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../models/car.dart';
+import '../models/car_brand.dart';
+import '../services/car_brand_service.dart';
+import '../widgets/brand_selector_dialog.dart';
 import '../l10n/app_localizations.dart';
 
 class CarDrawer extends StatelessWidget {
@@ -46,20 +49,46 @@ class CarDrawer extends StatelessWidget {
               // List of cars
               ...cars.map((car) {
                 final isActive = car.id == activeCar?.id;
+                final brand = CarBrandService.getBrandBySlug(car.brandSlug);
+                
                 return ListTile(
-                  leading: Icon(
-                    Icons.directions_car,
-                    color: isActive ? Theme.of(context).colorScheme.primary : null,
-                  ),
+                  leading: brand != null
+                      ? Image.asset(
+                          brand.localImagePath,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.directions_car,
+                            color: isActive ? Theme.of(context).colorScheme.primary : null,
+                          ),
+                        )
+                      : Icon(
+                          Icons.directions_car,
+                          color: isActive ? Theme.of(context).colorScheme.primary : null,
+                        ),
                   title: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          car.name,
-                          style: TextStyle(
-                            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                            color: isActive ? Theme.of(context).colorScheme.primary : null,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (brand != null)
+                              Text(
+                                brand.name,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            Text(
+                              car.name,
+                              style: TextStyle(
+                                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                                color: isActive ? Theme.of(context).colorScheme.primary : null,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       if (isActive)
@@ -144,144 +173,142 @@ class CarDrawer extends StatelessWidget {
   }
 
   void _showAddCarDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final nameController = TextEditingController();
-    final plateController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.newCar),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.carName,
-                  hintText: l10n.enterCarName,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.carNameRequired;
-                  }
-                  return null;
-                },
-                autofocus: true,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: plateController,
-                decoration: InputDecoration(
-                  labelText: l10n.plateNumber,
-                  hintText: l10n.enterPlateNumber,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                final newCar = Car.create(
-                  name: nameController.text.trim(),
-                  plateNumber: plateController.text.trim(),
-                );
-                
-                final provider = Provider.of<AppProvider>(context, listen: false);
-                provider.addCar(newCar);
-                provider.switchCar(newCar.id);
-                
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${newCar.name} ${l10n.addCar.toLowerCase()}')),
-                );
-              }
-            },
-            child: Text(l10n.save),
-          ),
-        ],
-      ),
-    );
+    _showCarFormDialog(context, isEdit: false);
   }
 
   void _showEditCarDialog(BuildContext context, Car car) {
+    _showCarFormDialog(context, isEdit: true, existingCar: car);
+  }
+
+  void _showCarFormDialog(BuildContext context, {required bool isEdit, Car? existingCar}) {
     final l10n = AppLocalizations.of(context)!;
-    final nameController = TextEditingController(text: car.name);
-    final plateController = TextEditingController(text: car.plateNumber);
+    final nameController = TextEditingController(text: existingCar?.name);
+    final plateController = TextEditingController(text: existingCar?.plateNumber);
     final formKey = GlobalKey<FormState>();
+    
+    String? selectedBrandSlug = existingCar?.brandSlug;
+    CarBrand? selectedBrand = selectedBrandSlug != null 
+        ? CarBrandService.getBrandBySlug(selectedBrandSlug)
+        : null;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.editCar),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.carName,
-                  hintText: l10n.enterCarName,
-                  border: const OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.carNameRequired;
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(isEdit ? l10n.editCar : l10n.newCar),
+          content: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Brand selector
+                  InkWell(
+                    onTap: () async {
+                      final result = await showDialog<CarBrand?>(
+                        context: context,
+                        builder: (context) => BrandSelectorDialog(
+                          initialBrandSlug: selectedBrandSlug,
+                        ),
+                      );
+                      
+                      if (result != null || result == null) {
+                        setState(() {
+                          selectedBrand = result;
+                          selectedBrandSlug = result?.slug;
+                        });
+                      }
+                    },
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: l10n.brand,
+                        border: const OutlineInputBorder(),
+                        suffixIcon: const Icon(Icons.arrow_drop_down),
+                      ),
+                      child: Row(
+                        children: [
+                          if (selectedBrand != null) ...[
+                            Image.asset(
+                              selectedBrand!.localImagePath,
+                              width: 30,
+                              height: 30,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.car_rental, size: 30),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(child: Text(selectedBrand!.name)),
+                          ] else
+                            Text(
+                              l10n.selectBrand,
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: l10n.carName,
+                      hintText: l10n.enterCarName,
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.carNameRequired;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: plateController,
+                    decoration: InputDecoration(
+                      labelText: l10n.plateNumber,
+                      hintText: l10n.enterPlateNumber,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  final provider = Provider.of<AppProvider>(context, listen: false);
+                  
+                  if (isEdit && existingCar != null) {
+                    final updatedCar = existingCar.copyWith(
+                      name: nameController.text.trim(),
+                      plateNumber: plateController.text.trim(),
+                      brandSlug: selectedBrandSlug,
+                    );
+                    provider.updateCar(updatedCar);
+                  } else {
+                    final newCar = Car.create(
+                      name: nameController.text.trim(),
+                      plateNumber: plateController.text.trim(),
+                      brandSlug: selectedBrandSlug,
+                    );
+                    provider.addCar(newCar);
+                    provider.switchCar(newCar.id);
                   }
-                  return null;
-                },
-                autofocus: true,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: plateController,
-                decoration: InputDecoration(
-                  labelText: l10n.plateNumber,
-                  hintText: l10n.enterPlateNumber,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
+                  
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(l10n.save),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                final updatedCar = car.copyWith(
-                  name: nameController.text.trim(),
-                  plateNumber: plateController.text.trim(),
-                );
-                
-                final provider = Provider.of<AppProvider>(context, listen: false);
-                provider.updateCar(updatedCar);
-                
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${updatedCar.name} ${l10n.edit.toLowerCase()}')),
-                );
-              }
-            },
-            child: Text(l10n.save),
-          ),
-        ],
       ),
     );
   }

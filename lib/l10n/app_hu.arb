@@ -110,6 +110,13 @@
   "cannotDeleteLastCar": "Az utolsó autót nem lehet törölni",
   "enterCarName": "Add meg az autó nevét",
   "enterPlateNumber": "Add meg a rendszámot (opcionális)",
-  "carNameRequired": "Az autó neve kötelező"
+  "carNameRequired": "Az autó neve kötelező",
+  "brand": "Márka",
+  "selectBrand": "Márka kiválasztása",
+  "searchBrands": "Márkák keresése...",
+  "noBrand": "Nincs márka",
+  "nickname": "Becenév",
+  "enterNickname": "Add meg a becenevet (opcionális)",
+  "nicknameHint": "pl. Polo, Otthoni autó"
 }
 

@@ -59,8 +59,8 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.list_alt),
-              title: const Text('Custom Service Items'),
-              subtitle: Text('${appProvider.serviceItems.where((i) => i.isCustom).length} custom items'),
+              title: Text(l10n.manageItems),
+              subtitle: Text('${appProvider.serviceItems.where((i) => i.isCustom).length} ${l10n.custom.toLowerCase()}'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => _showCustomItemsDialog(context, appProvider, l10n),
             ),
@@ -273,11 +273,11 @@ class SettingsScreen extends StatelessWidget {
           final customItems = provider.serviceItems.where((i) => i.isCustom).toList();
           
           return AlertDialog(
-            title: const Text('Custom Service Items'),
+            title: Text(l10n.manageItems),
             content: customItems.isEmpty
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('No custom items yet. Add one when creating a service event!'),
+                ? Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(l10n.noItemsSelected),
                   )
                 : SizedBox(
                     width: double.maxFinite,
@@ -317,7 +317,7 @@ class SettingsScreen extends StatelessWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: Text(l10n.cancel),
               ),
             ],
           );
@@ -335,8 +335,8 @@ class SettingsScreen extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Custom Item'),
-        content: Text('Are you sure you want to delete "${item.customName}"?'),
+        title: Text(l10n.deleteItem),
+        content: Text(l10n.deleteItemConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -345,7 +345,7 @@ class SettingsScreen extends StatelessWidget {
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -355,8 +355,8 @@ class SettingsScreen extends StatelessWidget {
       await appProvider.deleteServiceItem(item.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Custom item deleted'),
+          SnackBar(
+            content: Text('${item.customName} ${l10n.delete.toLowerCase()}'),
             backgroundColor: Colors.green,
           ),
         );
