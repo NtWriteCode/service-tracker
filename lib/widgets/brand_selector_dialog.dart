@@ -40,13 +40,14 @@ class _BrandSelectorDialogState extends State<BrandSelectorDialog> {
   }
 
   void _filterBrands(String query) {
+    final trimmedQuery = query.trim();
     setState(() {
-      if (query.isEmpty) {
+      if (trimmedQuery.isEmpty) {
         _filteredBrands = _allBrands;
       } else {
         _filteredBrands = _allBrands
             .where((brand) =>
-                brand.name.toLowerCase().contains(query.toLowerCase()))
+                brand.name.toLowerCase().contains(trimmedQuery.toLowerCase()))
             .toList();
       }
     });
