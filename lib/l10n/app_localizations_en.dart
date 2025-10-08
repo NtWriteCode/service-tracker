@@ -349,4 +349,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nicknameHint => 'e.g., Polo, Home car';
+
+  @override
+  String get webdavSync => 'WebDAV Sync';
+
+  @override
+  String get webdavSettings => 'WebDAV Settings';
+
+  @override
+  String get webdavUrl => 'WebDAV URL';
+
+  @override
+  String get webdavUsername => 'Username';
+
+  @override
+  String get webdavPassword => 'Password';
+
+  @override
+  String get webdavConnected => 'Connected';
+
+  @override
+  String get webdavNotConnected => 'Not connected';
+
+  @override
+  String get webdavLogin => 'Login';
+
+  @override
+  String get webdavLogout => 'Logout';
+
+  @override
+  String get webdavValidating => 'Validating connection...';
+
+  @override
+  String get webdavValidationSuccess => 'Connection successful';
+
+  @override
+  String get webdavValidationFailed =>
+      'Connection failed. Please check your credentials.';
+
+  @override
+  String get webdavAutoSync => 'Auto-sync';
+
+  @override
+  String get webdavAutoSyncDesc => 'Automatically sync data after each change';
+
+  @override
+  String get webdavExport => 'Export to Server';
+
+  @override
+  String get webdavImport => 'Import from Server';
+
+  @override
+  String get webdavExporting => 'Exporting...';
+
+  @override
+  String get webdavImporting => 'Importing...';
+
+  @override
+  String get webdavExportSuccess => 'Export successful';
+
+  @override
+  String get webdavImportSuccess => 'Import successful';
+
+  @override
+  String get webdavExportFailed => 'Export failed';
+
+  @override
+  String get webdavImportFailed => 'Import failed';
+
+  @override
+  String get webdavSyncStatus => 'Sync Status';
+
+  @override
+  String get webdavFilesOnServer => 'Files on server';
+
+  @override
+  String get enterWebdavUrl =>
+      'Enter WebDAV URL (e.g., https://your-server.com/remote.php/dav/files/username/)';
+
+  @override
+  String get enterUsername => 'Enter username';
+
+  @override
+  String get enterPassword => 'Enter password';
+
+  @override
+  String get webdavUrlRequired => 'WebDAV URL is required';
+
+  @override
+  String get usernameRequired => 'Username is required';
+
+  @override
+  String get passwordRequired => 'Password is required';
+
+  @override
+  String get logoutConfirm =>
+      'Are you sure you want to logout? This will not delete any local data.';
 }

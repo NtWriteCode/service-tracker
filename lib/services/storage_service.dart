@@ -8,10 +8,13 @@ import '../models/service_event.dart';
 import '../models/reminder.dart';
 import '../models/app_settings.dart';
 import '../constants/default_items.dart';
+import 'webdav_service.dart';
 
 class StorageService {
   static const String _carsFile = 'cars.json';
   static const String _activeCarKey = 'active_car_id';
+  
+  WebdavService? _webdavService;
   
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -25,6 +28,11 @@ class StorageService {
   
   String _getCarFileName(String carId, String type) {
     return 'car_${carId}_$type.json';
+  }
+  
+  /// Set WebDAV service for auto-sync
+  void setWebdavService(WebdavService? service) {
+    _webdavService = service;
   }
   
   // Cars Management
@@ -48,6 +56,9 @@ class StorageService {
       final file = await _getFile(_carsFile);
       final jsonData = cars.map((car) => car.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
+      
+      // Auto-sync to WebDAV
+      await _webdavService?.autoSyncFile(_carsFile);
     } catch (e) {
       print('Error saving cars: $e');
     }
@@ -92,9 +103,13 @@ class StorageService {
 
   Future<void> saveServiceItems(List<ServiceItem> items, String carId) async {
     try {
-      final file = await _getFile(_getCarFileName(carId, 'service_items'));
+      final fileName = _getCarFileName(carId, 'service_items');
+      final file = await _getFile(fileName);
       final jsonData = items.map((item) => item.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
+      
+      // Auto-sync to WebDAV
+      await _webdavService?.autoSyncFile(fileName);
     } catch (e) {
       print('Error saving service items: $e');
     }
@@ -118,9 +133,13 @@ class StorageService {
 
   Future<void> saveServiceEvents(List<ServiceEvent> events, String carId) async {
     try {
-      final file = await _getFile(_getCarFileName(carId, 'service_events'));
+      final fileName = _getCarFileName(carId, 'service_events');
+      final file = await _getFile(fileName);
       final jsonData = events.map((event) => event.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
+      
+      // Auto-sync to WebDAV
+      await _webdavService?.autoSyncFile(fileName);
     } catch (e) {
       print('Error saving service events: $e');
     }
@@ -144,9 +163,13 @@ class StorageService {
 
   Future<void> saveReminders(List<Reminder> reminders, String carId) async {
     try {
-      final file = await _getFile(_getCarFileName(carId, 'reminders'));
+      final fileName = _getCarFileName(carId, 'reminders');
+      final file = await _getFile(fileName);
       final jsonData = reminders.map((reminder) => reminder.toJson()).toList();
       await file.writeAsString(json.encode(jsonData));
+      
+      // Auto-sync to WebDAV
+      await _webdavService?.autoSyncFile(fileName);
     } catch (e) {
       print('Error saving reminders: $e');
     }
@@ -172,8 +195,12 @@ class StorageService {
 
   Future<void> saveSettings(AppSettings settings, String carId) async {
     try {
-      final file = await _getFile(_getCarFileName(carId, 'settings'));
+      final fileName = _getCarFileName(carId, 'settings');
+      final file = await _getFile(fileName);
       await file.writeAsString(json.encode(settings.toJson()));
+      
+      // Auto-sync to WebDAV
+      await _webdavService?.autoSyncFile(fileName);
     } catch (e) {
       print('Error saving settings: $e');
     }

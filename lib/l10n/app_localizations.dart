@@ -763,6 +763,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g., Polo, Home car'**
   String get nicknameHint;
+
+  /// No description provided for @webdavSync.
+  ///
+  /// In en, this message translates to:
+  /// **'WebDAV Sync'**
+  String get webdavSync;
+
+  /// No description provided for @webdavSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'WebDAV Settings'**
+  String get webdavSettings;
+
+  /// No description provided for @webdavUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'WebDAV URL'**
+  String get webdavUrl;
+
+  /// No description provided for @webdavUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get webdavUsername;
+
+  /// No description provided for @webdavPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get webdavPassword;
+
+  /// No description provided for @webdavConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get webdavConnected;
+
+  /// No description provided for @webdavNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get webdavNotConnected;
+
+  /// No description provided for @webdavLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get webdavLogin;
+
+  /// No description provided for @webdavLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get webdavLogout;
+
+  /// No description provided for @webdavValidating.
+  ///
+  /// In en, this message translates to:
+  /// **'Validating connection...'**
+  String get webdavValidating;
+
+  /// No description provided for @webdavValidationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection successful'**
+  String get webdavValidationSuccess;
+
+  /// No description provided for @webdavValidationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed. Please check your credentials.'**
+  String get webdavValidationFailed;
+
+  /// No description provided for @webdavAutoSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-sync'**
+  String get webdavAutoSync;
+
+  /// No description provided for @webdavAutoSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically sync data after each change'**
+  String get webdavAutoSyncDesc;
+
+  /// No description provided for @webdavExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to Server'**
+  String get webdavExport;
+
+  /// No description provided for @webdavImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from Server'**
+  String get webdavImport;
+
+  /// No description provided for @webdavExporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get webdavExporting;
+
+  /// No description provided for @webdavImporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing...'**
+  String get webdavImporting;
+
+  /// No description provided for @webdavExportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Export successful'**
+  String get webdavExportSuccess;
+
+  /// No description provided for @webdavImportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Import successful'**
+  String get webdavImportSuccess;
+
+  /// No description provided for @webdavExportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get webdavExportFailed;
+
+  /// No description provided for @webdavImportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed'**
+  String get webdavImportFailed;
+
+  /// No description provided for @webdavSyncStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get webdavSyncStatus;
+
+  /// No description provided for @webdavFilesOnServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Files on server'**
+  String get webdavFilesOnServer;
+
+  /// No description provided for @enterWebdavUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter WebDAV URL (e.g., https://your-server.com/remote.php/dav/files/username/)'**
+  String get enterWebdavUrl;
+
+  /// No description provided for @enterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter username'**
+  String get enterUsername;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter password'**
+  String get enterPassword;
+
+  /// No description provided for @webdavUrlRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'WebDAV URL is required'**
+  String get webdavUrlRequired;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout? This will not delete any local data.'**
+  String get logoutConfirm;
 }
 
 class _AppLocalizationsDelegate

@@ -351,4 +351,101 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get nicknameHint => 'pl. Polo, Otthoni autó';
+
+  @override
+  String get webdavSync => 'WebDAV szinkronizálás';
+
+  @override
+  String get webdavSettings => 'WebDAV beállítások';
+
+  @override
+  String get webdavUrl => 'WebDAV URL';
+
+  @override
+  String get webdavUsername => 'Felhasználónév';
+
+  @override
+  String get webdavPassword => 'Jelszó';
+
+  @override
+  String get webdavConnected => 'Kapcsolódva';
+
+  @override
+  String get webdavNotConnected => 'Nincs kapcsolat';
+
+  @override
+  String get webdavLogin => 'Bejelentkezés';
+
+  @override
+  String get webdavLogout => 'Kijelentkezés';
+
+  @override
+  String get webdavValidating => 'Kapcsolat ellenőrzése...';
+
+  @override
+  String get webdavValidationSuccess => 'Sikeres kapcsolódás';
+
+  @override
+  String get webdavValidationFailed =>
+      'Kapcsolódás sikertelen. Ellenőrizd a bejelentkezési adatokat.';
+
+  @override
+  String get webdavAutoSync => 'Automatikus szinkronizálás';
+
+  @override
+  String get webdavAutoSyncDesc =>
+      'Automatikus adatszinkronizálás minden változtatás után';
+
+  @override
+  String get webdavExport => 'Exportálás a szerverre';
+
+  @override
+  String get webdavImport => 'Importálás a szerverről';
+
+  @override
+  String get webdavExporting => 'Exportálás folyamatban...';
+
+  @override
+  String get webdavImporting => 'Importálás folyamatban...';
+
+  @override
+  String get webdavExportSuccess => 'Sikeres exportálás';
+
+  @override
+  String get webdavImportSuccess => 'Sikeres importálás';
+
+  @override
+  String get webdavExportFailed => 'Exportálás sikertelen';
+
+  @override
+  String get webdavImportFailed => 'Importálás sikertelen';
+
+  @override
+  String get webdavSyncStatus => 'Szinkronizálási állapot';
+
+  @override
+  String get webdavFilesOnServer => 'Fájlok a szerveren';
+
+  @override
+  String get enterWebdavUrl =>
+      'Add meg a WebDAV URL-t (pl. https://sajat-szerver.com/remote.php/dav/files/felhasznalonev/)';
+
+  @override
+  String get enterUsername => 'Add meg a felhasználónevet';
+
+  @override
+  String get enterPassword => 'Add meg a jelszót';
+
+  @override
+  String get webdavUrlRequired => 'WebDAV URL megadása kötelező';
+
+  @override
+  String get usernameRequired => 'Felhasználónév megadása kötelező';
+
+  @override
+  String get passwordRequired => 'Jelszó megadása kötelező';
+
+  @override
+  String get logoutConfirm =>
+      'Biztosan ki szeretnél jelentkezni? Ez nem törli a helyi adatokat.';
 }

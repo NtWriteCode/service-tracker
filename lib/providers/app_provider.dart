@@ -6,9 +6,11 @@ import '../models/reminder.dart';
 import '../models/app_settings.dart';
 import '../services/storage_service.dart';
 import '../services/car_brand_service.dart';
+import '../services/webdav_service.dart';
 
 class AppProvider with ChangeNotifier {
   final StorageService _storageService = StorageService();
+  final WebdavService _webdavService = WebdavService();
 
   List<Car> _cars = [];
   String? _activeCarId;
@@ -37,6 +39,7 @@ class AppProvider with ChangeNotifier {
   List<Reminder> get reminders => _reminders;
   AppSettings get settings => _settings;
   bool get isLoading => _isLoading;
+  WebdavService get webdavService => _webdavService;
 
   AppProvider() {
     _loadData();
@@ -80,6 +83,14 @@ class AppProvider with ChangeNotifier {
     _serviceEvents = await _storageService.loadServiceEvents(carId);
     _reminders = await _storageService.loadReminders(carId);
     _settings = await _storageService.loadSettings(carId);
+    
+    // Initialize WebDAV service with loaded settings
+    _initializeWebdavService();
+  }
+  
+  void _initializeWebdavService() {
+    _webdavService.initialize(_settings);
+    _storageService.setWebdavService(_webdavService);
   }
 
   // Car Management
@@ -244,6 +255,74 @@ class AppProvider with ChangeNotifier {
     _settings = _settings.copyWith(currency: currency);
     await _storageService.saveSettings(_settings, _activeCarId!);
     notifyListeners();
+  }
+
+  // WebDAV Sync
+  Future<bool> updateWebdavCredentials({
+    required String url,
+    required String username,
+    required String password,
+  }) async {
+    // Validate connection first
+    final isValid = await _webdavService.validateConnection(url, username, password);
+    if (!isValid) {
+      return false;
+    }
+
+    _settings = _settings.copyWith(
+      webdavUrl: url,
+      webdavUsername: username,
+      webdavPassword: password,
+    );
+    
+    // Re-initialize WebDAV service BEFORE saving to enable auto-sync
+    _initializeWebdavService();
+    
+    // Now save settings - this will trigger auto-sync if enabled
+    await _storageService.saveSettings(_settings, _activeCarId!);
+    
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> clearWebdavCredentials() async {
+    _settings = _settings.clearWebdavCredentials();
+    await _storageService.saveSettings(_settings, _activeCarId!);
+    
+    _webdavService.clear();
+    _storageService.setWebdavService(null);
+    
+    notifyListeners();
+  }
+
+  Future<void> updateAutoSync(bool enabled) async {
+    _settings = _settings.copyWith(autoSync: enabled);
+    
+    // Re-initialize WebDAV service to pick up the new autoSync setting
+    _initializeWebdavService();
+    
+    await _storageService.saveSettings(_settings, _activeCarId!);
+    notifyListeners();
+  }
+
+  Future<Map<String, bool>> exportToWebdav() async {
+    return await _webdavService.syncToServer();
+  }
+
+  Future<Map<String, bool>> importFromWebdav() async {
+    final results = await _webdavService.syncFromServer();
+    
+    // Reload data after import
+    if (results.isNotEmpty) {
+      await _loadCarData(_activeCarId!);
+      notifyListeners();
+    }
+    
+    return results;
+  }
+
+  Future<Map<String, dynamic>> getWebdavSyncStatus() async {
+    return await _webdavService.getSyncStatus();
   }
 
   // Upcoming services calculation
