@@ -1,4 +1,4 @@
-package com.example.service_tracker
+package com.ntwritecode.service_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 
