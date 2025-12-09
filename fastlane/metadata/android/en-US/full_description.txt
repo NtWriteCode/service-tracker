@@ -1,0 +1,11 @@
+Service Tracker helps you keep track of your vehicle's maintenance history and upcoming service needs.
+
+Features:
+• Track service records with dates, mileage, and costs
+• Set reminders for upcoming maintenance
+• Store service receipts and photos
+• Multiple vehicle support
+• Export service history
+• Clean, intuitive interface
+
+Keep your vehicle running smoothly by never missing important maintenance again!
